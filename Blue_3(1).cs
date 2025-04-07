@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,39 +8,17 @@ namespace Lab_6
 {
     public class Blue_3
     {
-        public struct Participant
+        public class Participant
         {
-            private string name;
-            private string surname;
-            private int[] penaltyTimes;
+            protected string name;
+            protected string surname;
+            protected int[] penaltyTimes;
 
-            public Participant(string name, string surname)
-            {
-                this.name = name;
-                this.surname = surname;
-                this.penaltyTimes = new int[0];
-            }
+            public string Name => name;
 
-            public string Name
-            {
-                get
-                {
-                    if (name == null)
-                        return null;
-                    return name;
-                }
-            }
+            public string Surname => surname;
 
-            public string Surname
-            {
-                get
-                {
-                    if (surname == null)
-                        return null;
-                    return surname;
-                }
-            }
-            public int[] PenaltyTimes
+            public int[] Penalties
             {
                 get
                 {
@@ -52,32 +30,31 @@ namespace Lab_6
                 }
             }
 
-            public int TotalTime
+            public int Total
             {
                 get
                 {
                     if (penaltyTimes == null)
                         return 0;
-
-                    int k = 0;
-                    foreach (int t in penaltyTimes)
+                    int totalScore = 0;
+                    foreach (int penalty in penaltyTimes)
                     {
-                        k += t;
+                        totalScore += penalty;
                     }
-                    return k;
+                    return totalScore;
                 }
             }
 
-            public bool IsExpelled
+            public virtual bool IsExpelled
             {
                 get
                 {
                     if (penaltyTimes == null)
                         return false;
 
-                    foreach (int t in penaltyTimes)
+                    foreach (int penalty in penaltyTimes)
                     {
-                        if (t == 10)
+                        if (penalty == 10)
                         {
                             return true;
                         }
@@ -85,33 +62,29 @@ namespace Lab_6
                     return false;
                 }
             }
-            public void PlayMatch(int time)
+
+            public virtual void PlayMatch(int value)
             {
                 if (penaltyTimes == null)
                     return;
 
                 int[] newArray = new int[penaltyTimes.Length + 1];
-
-                for (int i = 0; i < penaltyTimes.Length; i++)
-                {
-                    newArray[i] = penaltyTimes[i];
-                }
-                newArray[newArray.Length - 1] = time;
+                Array.Copy(penaltyTimes, newArray, penaltyTimes.Length);
+                newArray[newArray.Length - 1] = value;
                 penaltyTimes = newArray;
             }
 
             public static void Sort(Participant[] array)
             {
                 if (array == null) return;
-                for (int i = 0; i < array.Length; i++)
+
+                for (int i = 0; i < array.Length - 1; i++)
                 {
                     for (int j = 0; j < array.Length - i - 1; j++)
                     {
-                        if (array[j].TotalTime > array[j + 1].TotalTime)
+                        if (array[j].Total > array[j + 1].Total)
                         {
-                            Participant temp = array[j];
-                            array[j] = array[j + 1];
-                            array[j + 1] = temp;
+                            (array[j], array[j + 1]) = (array[j + 1], array[j]);
                         }
                     }
                 }
@@ -119,20 +92,86 @@ namespace Lab_6
 
             public void Print()
             {
-                Console.Write("Name: ");
-                Console.WriteLine(name);
-
-                Console.Write("Surname: ");
-                Console.WriteLine(surname);
-
-                Console.Write("PenaltyTimes: ");
-                for (int i  = 0; i < penaltyTimes.Length; i++)
+                Console.WriteLine($"Name: {name}");
+                Console.WriteLine($"Surname: {surname}");
+                Console.Write("Penalties: ");
+                foreach (var penalty in penaltyTimes)
                 {
-                    Console.Write(penaltyTimes[i]);
-                    Console.Write(" ");
+                    Console.Write(penalty + " ");
+                }
+                Console.WriteLine();
+            }
+
+            public Participant(string name, string surname)
+            {
+                this.name = name;
+                this.surname = surname;
+                this.penaltyTimes = new int[0];
+            }
+        }
+
+        public class BasketballPlayer : Participant
+        {
+            private int matchesPlayed;
+
+            public BasketballPlayer(string name, string surname) : base(name, surname) { }
+
+            public override bool IsExpelled
+            {
+                get
+                {
+                    if (matchesPlayed == 0) return false;
+
+                    int fiveFoulsCount = 0;
+                    foreach (var penalty in penaltyTimes)
+                    {
+                        if (penalty == 5)
+                        {
+                            fiveFoulsCount++;
+                        }
+                    }
+
+                    return fiveFoulsCount > matchesPlayed * 0.1 || Total > matchesPlayed * 2;
                 }
             }
-            
+
+            public override void PlayMatch(int fouls)
+            {
+                if (fouls < 0 || fouls > 5)
+                    throw new ArgumentOutOfRangeException(nameof(fouls), "Fouls must be between 0 and 5.");
+
+                base.PlayMatch(fouls);
+                matchesPlayed++;
+            }
+        }
+
+        public class HockeyPlayer : Participant
+        {
+            public HockeyPlayer(string name, string surname) : base(name, surname) { }
+
+            public override bool IsExpelled
+            {
+                get
+                {
+                    if (Array.Exists(penaltyTimes, penalty => penalty >= 10))
+                    {
+                        return true;
+                    }
+
+                    int totalPenaltyTime = 0; 
+                    int totalPlayers = 1;      
+
+                    return Total > ((totalPenaltyTime / (double)totalPlayers) * 0.1);
+                }
+            }
+
+            public override void PlayMatch(int penaltyMinutes)
+            {
+                if (penaltyMinutes < 0)
+                    throw new ArgumentOutOfRangeException(nameof(penaltyMinutes), "Penalty minutes cannot be negative.");
+
+                base.PlayMatch(penaltyMinutes);
+            }
         }
     }
 }
