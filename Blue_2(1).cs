@@ -1,9 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace Lab_6
 {
@@ -16,25 +15,9 @@ namespace Lab_6
             private int[,] marks;
             private int ind;
 
-            public string Name
-            {
-                get
-                {
-                    if (name == null)
-                        return null;
-                    return name;
-                }
-            }
+            public string Name => name;
 
-            public string Surname
-            {
-                get
-                {
-                    if (surname == null)
-                        return null;
-                    return surname;
-                }
-            }
+            public string Surname => surname;
 
             public int[,] Marks
             {
@@ -112,15 +95,14 @@ namespace Lab_6
 
             public static void Sort(Participant[] array)
             {
-
-                if (array == null || array.Length == 0) 
+                if (array == null || array.Length == 0)
                     return;
 
                 for (int i = 0; i < array.Length - 1; i++)
                 {
                     for (int j = 0; j < array.Length - i - 1; j++)
                     {
-                        if (array[j + 1].TotalScore > array[j].TotalScore) 
+                        if (array[j + 1].TotalScore > array[j].TotalScore)
                         {
                             (array[j + 1], array[j]) = (array[j], array[j + 1]);
                         }
@@ -151,7 +133,104 @@ namespace Lab_6
                 }
 
                 Console.WriteLine($"Общий балл: {TotalScore}");
+            }
+        }
 
+        public abstract class WaterJump
+        {
+            private string tournamentName;
+            private int prizeFund;
+            private List<Participant> participants;
+
+            public string Name => tournamentName;
+
+            public int Bank => prizeFund;
+
+            public IReadOnlyList<Participant> Participants => participants.AsReadOnly();
+
+            public abstract double[] Prize { get; }
+
+            protected WaterJump(string tournamentName, int prizeFund)
+            {
+                this.tournamentName = tournamentName;
+                this.prizeFund = prizeFund;
+                this.participants = new List<Participant>();
+            }
+
+            public void Add(Participant participant)
+            {
+                participants.Add(participant);
+            }
+
+            public void Add(params Participant[] newParticipants)
+            {
+                foreach (var participant in newParticipants)
+                {
+                    Add(participant);
+                }
+            }
+        }
+
+        public class WaterJump3m : WaterJump
+        {
+            public WaterJump3m(string tournamentName, int prizeFund) : base(tournamentName, prizeFund) { }
+
+            public override double[] Prize
+            {
+                get
+                {
+                    int count = Participants.Count;
+
+                    if (count < 3) return new double[0];
+
+                    double[] prizes = new double[3];
+                    prizes[0] = Bank * 0.5; 
+                    prizes[1] = Bank * 0.3; 
+                    prizes[2] = Bank * 0.2; 
+
+                    return prizes;
+                }
+            }
+        }
+
+        public class WaterJump5m : WaterJump
+        {
+            public WaterJump5m(string tournamentName, int prizeFund) : base(tournamentName, prizeFund) { }
+
+            public override double[] Prize
+            {
+                get
+                {
+                    int count = Participants.Count;
+
+                    if (count < 3) return new double[0];
+
+                    double N = 20.0 / Math.Max(1, count / 2); 
+                    double percentageFirstPlace = 0.4;
+                    double percentageSecondPlace = 0.25;
+                    double percentageThirdPlace = 0.15;
+
+                    double[] prizes = new double[count > 10 ? 10 : count];
+                    int topCount = count / 2; 
+
+                    for (int i = 0; i < topCount; i++)
+                    {
+                        if (i < 3)
+                        {
+                            
+                            if (i == 0) prizes[i] = Bank * percentageFirstPlace; 
+                            else if (i == 1) prizes[i] = Bank * percentageSecondPlace; 
+                            else if (i == 2) prizes[i] = Bank * percentageThirdPlace; 
+                        }
+                        else
+                        {
+                        
+                            prizes[i] = N * (Bank / 100);
+                        }
+                    }
+
+                    return prizes;
+                }
             }
         }
     }
