@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,55 +8,33 @@ namespace Lab_6
 {
     public class Blue_1
     {
-        public struct Response
+        public class Response
         {
-
             private string name;
-            private string surname;
-            private int votes;
+            protected int votes;
+
             public string Name
             {
-                get
-                {
-                    if (name == null)
-                        return null;
-                    return name;
-                }
-            }
-
-            public string Surname
-            {
-                get
-                {
-                    if (surname == null)
-                        return null;
-                    return surname;
-                }
+                get => name;
             }
 
             public int Votes
             {
-                get
-                {
-                    if (votes == null)
-                        return 0;
-                    return votes;
-                }
+                get => votes;
             }
-            public Response(string name, string surname)
+
+            public Response(string name)
             {
                 this.name = name;
-                this.surname = surname;
                 this.votes = 0;
             }
 
-            public int CountVotes(Response[] responses)
+            public virtual int CountVotes(Response[] responses)
             {
-
                 int count = 0;
                 foreach (var response in responses)
                 {
-                    if (response.Name == this.Name && response.Surname == this.Surname)
+                    if (response.Name == this.Name)
                     {
                         count++;
                     }
@@ -65,11 +43,42 @@ namespace Lab_6
                 this.votes = count;
                 return count;
             }
-            
-            public void Print()
+
+            public virtual void Print()
             {
                 Console.WriteLine($"Name: {Name}");
-                Console.WriteLine($"Surname: {Surname}");
+                Console.WriteLine($"Votes: {Votes}");
+            }
+        }
+
+        public class HumanResponse : Response
+        {
+            private string surname;
+
+            public HumanResponse(string name, string surname) : base(name)
+            {
+                this.surname = surname;
+            }
+
+            public override int CountVotes(Response[] responses)
+            {
+                int count = 0;
+                foreach (var response in responses)
+                {
+                    if (response is HumanResponse human && human.Name == this.Name && human.surname == this.surname)
+                    {
+                        count++;
+                    }
+                }
+
+                this.votes = count;
+                return count;
+            }
+
+            public override void Print()
+            {
+                Console.WriteLine($"Name: {Name}");
+                Console.WriteLine($"Surname: {surname}");
                 Console.WriteLine($"Votes: {Votes}");
             }
         }
