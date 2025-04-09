@@ -47,16 +47,16 @@ namespace Lab_7
         public abstract class Team
         {
             protected string name;
-            protected Sportsman[] sportsmen; // Изменено на массив
+            protected Sportsman[] sportsmen; 
             protected int count;
 
             public string Name => name;
-            public int Count => count; // Добавлено свойство для количества спортсменов
+            public int Count => count; 
 
             public Team(string name)
             {
                 this.name = name;
-                this.sportsmen = new Sportsman[6]; // Размер фиксированного массива
+                this.sportsmen = new Sportsman[6]; 
                 this.count = 0;
             }
 
@@ -64,7 +64,7 @@ namespace Lab_7
             {
                 if (count < 6)
                 {
-                    sportsmen[count] = sportsman; // Добавление в массив
+                    sportsmen[count] = sportsman; 
                     count++;
                 }
                 else
@@ -109,13 +109,13 @@ namespace Lab_7
                 Console.WriteLine("Спортсмены:");
                 for (int i = 0; i < count; i++)
                 {
-                    sportsmen[i]?.Print(); // Проверяем на null
+                    sportsmen[i]?.Print(); 
                 }
             }
 
             public void Sort()
             {
-                Array.Sort(sportsmen, 0, count, new Comparison<Sportsman>((x, y) => x.Place.CompareTo(y.Place))); // Сортировка
+                Array.Sort(sportsmen, 0, count, new Comparison<Sportsman>((x, y) => x.Place.CompareTo(y.Place))); 
             }
 
             public double SummaryScore()
@@ -123,7 +123,7 @@ namespace Lab_7
                 double totalScore = 0;
                 for (int i = 0; i < count; i++)
                 {
-                    totalScore += sportsmen[i].Place; // Суммируем места
+                    totalScore += sportsmen[i].Place; 
                 }
                 return totalScore;
             }
@@ -137,12 +137,12 @@ namespace Lab_7
                     {
                         if (sportsmen[i].Place > 0 && sportsmen[i].Place < top)
                         {
-                            top = sportsmen[i].Place; // Находим лучшее место
+                            top = sportsmen[i].Place; 
                         }
                     }
                     return top;
                 }
-                return 0; // Если нет спортсменов
+                return 0; 
             }
         }
 
