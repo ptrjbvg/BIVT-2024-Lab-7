@@ -132,13 +132,13 @@ namespace Lab_7
         {
             private string tournamentName;
             private int prizeFund;
-            private Participant[] participants; 
-            private int participantCount; 
+            private Participant[] participants;
+            private int participantCount;
 
             public string Name => tournamentName;
             public int Bank => prizeFund;
 
-            public IReadOnlyList<Participant> Participants => Array.AsReadOnly(participants); 
+            public IReadOnlyList<Participant> Participants => Array.AsReadOnly(participants);
 
             public abstract double[] Prize { get; }
 
@@ -147,7 +147,7 @@ namespace Lab_7
                 this.tournamentName = tournamentName;
                 this.prizeFund = prizeFund;
                 this.participants = new Participant[6];
-                this.participantCount = 0; 
+                this.participantCount = 0;
             }
 
             public void Add(Participant participant)
@@ -180,7 +180,7 @@ namespace Lab_7
             {
                 get
                 {
-                    if (participantCount < 3) return new double[0]; 
+                    if (participantCount < 3) return new double[0];
 
                     double[] prizes = new double[3];
                     prizes[0] = Bank * 0.5; 
@@ -200,7 +200,7 @@ namespace Lab_7
             {
                 get
                 {
-                    if (participantCount < 3) return new double[0]; 
+                    if (participantCount < 3) return new double[0];
 
                     double N = 20.0 / Math.Max(1, participantCount / 2); 
                     double percentageFirstPlace = 0.4;
@@ -228,3 +228,5 @@ namespace Lab_7
         }
     }
 }
+
+        
