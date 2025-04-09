@@ -55,6 +55,11 @@ namespace Lab_7
         {
             private string surname;
 
+            public string Surname // добавлено свойство Surname
+            {
+                get => surname;
+            }
+
             public HumanResponse(string name, string surname) : base(name)
             {
                 this.surname = surname;
@@ -65,7 +70,7 @@ namespace Lab_7
                 int count = 0;
                 foreach (var response in responses)
                 {
-                    if (response is HumanResponse human && human.Name == this.Name && human.surname == this.surname)
+                    if (response is HumanResponse human && human.Name == this.Name && human.Surname == this.Surname) // исправлено свойство на Surname
                     {
                         count++;
                     }
@@ -78,9 +83,12 @@ namespace Lab_7
             public override void Print()
             {
                 Console.WriteLine($"Name: {Name}");
-                Console.WriteLine($"Surname: {surname}");
+                Console.WriteLine($"Surname: {Surname}"); // исправлено
                 Console.WriteLine($"Votes: {Votes}");
             }
         }
     }
 }
+
+          
+
