@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace Lab_7
 {
     public class Blue_2
@@ -131,12 +132,13 @@ namespace Lab_7
         {
             private string tournamentName;
             private int prizeFund;
-            private List<Participant> participants;
+            private Participant[] participants; 
+            private int participantCount; 
 
             public string Name => tournamentName;
             public int Bank => prizeFund;
 
-            public IReadOnlyList<Participant> Participants => participants.AsReadOnly();
+            public IReadOnlyList<Participant> Participants => Array.AsReadOnly(participants); 
 
             public abstract double[] Prize { get; }
 
@@ -144,12 +146,21 @@ namespace Lab_7
             {
                 this.tournamentName = tournamentName;
                 this.prizeFund = prizeFund;
-                this.participants = new List<Participant>();
+                this.participants = new Participant[6];
+                this.participantCount = 0; 
             }
 
             public void Add(Participant participant)
             {
-                participants.Add(participant);
+                if (participantCount < participants.Length)
+                {
+                    participants[participantCount] = participant;
+                    participantCount++;
+                }
+                else
+                {
+                    Console.WriteLine("Команда полная, не удается добавить больше участников.");
+                }
             }
 
             public void Add(params Participant[] newParticipants)
@@ -169,9 +180,7 @@ namespace Lab_7
             {
                 get
                 {
-                    int count = Participants.Count;
-
-                    if (count < 3) return new double[0];
+                    if (participantCount < 3) return new double[0]; 
 
                     double[] prizes = new double[3];
                     prizes[0] = Bank * 0.5; 
@@ -191,17 +200,15 @@ namespace Lab_7
             {
                 get
                 {
-                    int count = Participants.Count;
+                    if (participantCount < 3) return new double[0]; 
 
-                    if (count < 3) return new double[0];
-
-                    double N = 20.0 / Math.Max(1, count / 2); 
+                    double N = 20.0 / Math.Max(1, participantCount / 2); 
                     double percentageFirstPlace = 0.4;
                     double percentageSecondPlace = 0.25;
                     double percentageThirdPlace = 0.15;
 
-                    double[] prizes = new double[count > 10 ? 10 : count];
-                    int topCount = Math.Min(3, count); 
+                    double[] prizes = new double[participantCount > 10 ? 10 : participantCount];
+                    int topCount = Math.Min(3, participantCount); 
 
                     for (int i = 0; i < topCount; i++)
                     {
@@ -210,7 +217,7 @@ namespace Lab_7
                         else if (i == 2) prizes[i] = Bank * percentageThirdPlace; 
                     }
 
-                    for (int i = topCount; i < prizes.Length && i < count; i++)
+                    for (int i = topCount; i < prizes.Length && i < participantCount; i++)
                     {
                         prizes[i] = N * (Bank / 100);
                     }
