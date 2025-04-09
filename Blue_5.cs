@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
 namespace Lab_7
 {
     public class Blue_5
@@ -48,16 +47,16 @@ namespace Lab_7
         public abstract class Team
         {
             protected string name;
-            protected List<Sportsman> sportsmen; 
+            protected Sportsman[] sportsmen; // Изменено на массив
             protected int count;
 
             public string Name => name;
-            public IReadOnlyList<Sportsman> Sportsmen => sportsmen.AsReadOnly(); 
+            public int Count => count; // Добавлено свойство для количества спортсменов
 
             public Team(string name)
             {
                 this.name = name;
-                this.sportsmen = new List<Sportsman>(6); 
+                this.sportsmen = new Sportsman[6]; // Размер фиксированного массива
                 this.count = 0;
             }
 
@@ -65,7 +64,7 @@ namespace Lab_7
             {
                 if (count < 6)
                 {
-                    sportsmen.Add(sportsman);
+                    sportsmen[count] = sportsman; // Добавление в массив
                     count++;
                 }
                 else
@@ -108,10 +107,42 @@ namespace Lab_7
             {
                 Console.WriteLine($"Команда: {name}");
                 Console.WriteLine("Спортсмены:");
-                foreach (var sportsman in sportsmen)
+                for (int i = 0; i < count; i++)
                 {
-                    sportsman.Print();
+                    sportsmen[i]?.Print(); // Проверяем на null
                 }
+            }
+
+            public void Sort()
+            {
+                Array.Sort(sportsmen, 0, count, new Comparison<Sportsman>((x, y) => x.Place.CompareTo(y.Place))); // Сортировка
+            }
+
+            public double SummaryScore()
+            {
+                double totalScore = 0;
+                for (int i = 0; i < count; i++)
+                {
+                    totalScore += sportsmen[i].Place; // Суммируем места
+                }
+                return totalScore;
+            }
+
+            public int TopPlace()
+            {
+                if (count > 0)
+                {
+                    int top = int.MaxValue;
+                    for (int i = 0; i < count; i++)
+                    {
+                        if (sportsmen[i].Place > 0 && sportsmen[i].Place < top)
+                        {
+                            top = sportsmen[i].Place; // Находим лучшее место
+                        }
+                    }
+                    return top;
+                }
+                return 0; // Если нет спортсменов
             }
         }
 
