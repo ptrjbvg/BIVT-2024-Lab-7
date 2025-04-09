@@ -16,7 +16,6 @@ namespace Lab_7
             private int ind;
 
             public string Name => name;
-
             public string Surname => surname;
 
             public int[,] Marks
@@ -64,7 +63,7 @@ namespace Lab_7
             {
                 this.name = name;
                 this.surname = surname;
-                this.marks = new int[2, 5];
+                this.marks = new int[2, 5]; 
                 this.ind = 0;
             }
 
@@ -75,19 +74,11 @@ namespace Lab_7
                     return;
                 }
 
-                if (ind == 0)
+                if (ind < 2) 
                 {
-                    for (int i = 0; i < 5; i++)
+                    for (int i = 0; i < 5 && i < result.Length; i++) 
                     {
-                        marks[0, i] = result[i];
-                    }
-                    ind++;
-                }
-                else if (ind == 1)
-                {
-                    for (int i = 0; i < 5; i++)
-                    {
-                        marks[1, i] = result[i];
+                        marks[ind, i] = result[i];
                     }
                     ind++;
                 }
@@ -143,7 +134,6 @@ namespace Lab_7
             private List<Participant> participants;
 
             public string Name => tournamentName;
-
             public int Bank => prizeFund;
 
             public IReadOnlyList<Participant> Participants => participants.AsReadOnly();
@@ -211,22 +201,18 @@ namespace Lab_7
                     double percentageThirdPlace = 0.15;
 
                     double[] prizes = new double[count > 10 ? 10 : count];
-                    int topCount = count / 2; 
+                    int topCount = Math.Min(3, count); 
 
                     for (int i = 0; i < topCount; i++)
                     {
-                        if (i < 3)
-                        {
-                            
-                            if (i == 0) prizes[i] = Bank * percentageFirstPlace; 
-                            else if (i == 1) prizes[i] = Bank * percentageSecondPlace; 
-                            else if (i == 2) prizes[i] = Bank * percentageThirdPlace; 
-                        }
-                        else
-                        {
-                        
-                            prizes[i] = N * (Bank / 100);
-                        }
+                        if (i == 0) prizes[i] = Bank * percentageFirstPlace; 
+                        else if (i == 1) prizes[i] = Bank * percentageSecondPlace; 
+                        else if (i == 2) prizes[i] = Bank * percentageThirdPlace; 
+                    }
+
+                    for (int i = topCount; i < prizes.Length && i < count; i++)
+                    {
+                        prizes[i] = N * (Bank / 100);
                     }
 
                     return prizes;
