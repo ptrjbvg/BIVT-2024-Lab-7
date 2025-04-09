@@ -50,12 +50,12 @@ namespace Lab_7
                 Console.WriteLine($"Votes: {Votes}");
             }
         }
-
+        
         public class HumanResponse : Response
         {
             private string surname;
 
-            public string Surname // добавлено свойство Surname
+            public string Surname 
             {
                 get => surname;
             }
@@ -70,7 +70,7 @@ namespace Lab_7
                 int count = 0;
                 foreach (var response in responses)
                 {
-                    if (response is HumanResponse human && human.Name == this.Name && human.Surname == this.Surname) // исправлено свойство на Surname
+                    if (response is HumanResponse human && human.Name == this.Name && human.Surname == this.Surname) 
                     {
                         count++;
                     }
@@ -83,7 +83,7 @@ namespace Lab_7
             public override void Print()
             {
                 Console.WriteLine($"Name: {Name}");
-                Console.WriteLine($"Surname: {Surname}"); // исправлено
+                Console.WriteLine($"Surname: {Surname}"); 
                 Console.WriteLine($"Votes: {Votes}");
             }
         }
@@ -91,4 +91,3 @@ namespace Lab_7
 }
 
           
-
