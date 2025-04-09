@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace Lab_7
 {
     public class Blue_5
@@ -16,9 +17,7 @@ namespace Lab_7
             private bool ind;
 
             public string Name => name;
-
-            public string Surname => surname;
-
+            public string Surname => surname; 
             public int Place => place;
 
             public Sportsman(string name, string surname)
@@ -49,17 +48,16 @@ namespace Lab_7
         public abstract class Team
         {
             protected string name;
-            protected Sportsman[] sportsmen;
+            protected List<Sportsman> sportsmen; 
             protected int count;
 
             public string Name => name;
-
-            public Sportsman[] Sportsmen => sportsmen;
+            public IReadOnlyList<Sportsman> Sportsmen => sportsmen.AsReadOnly(); 
 
             public Team(string name)
             {
                 this.name = name;
-                this.sportsmen = new Sportsman[6];
+                this.sportsmen = new List<Sportsman>(6); 
                 this.count = 0;
             }
 
@@ -67,7 +65,7 @@ namespace Lab_7
             {
                 if (count < 6)
                 {
-                    sportsmen[count] = sportsman;
+                    sportsmen.Add(sportsman);
                     count++;
                 }
                 else
@@ -112,7 +110,7 @@ namespace Lab_7
                 Console.WriteLine("Спортсмены:");
                 foreach (var sportsman in sportsmen)
                 {
-                    sportsman?.Print();
+                    sportsman.Print();
                 }
             }
         }
@@ -154,3 +152,4 @@ namespace Lab_7
         }
     }
 }
+
