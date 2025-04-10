@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
 namespace Lab_7
 {
     public class Blue_2
@@ -133,7 +132,7 @@ namespace Lab_7
             private string tournamentName;
             private int prizeFund;
             private Participant[] participants;
-            private int participantCount;
+            protected int participantCount; 
 
             public string Name => tournamentName;
             public int Bank => prizeFund;
@@ -228,5 +227,3 @@ namespace Lab_7
         }
     }
 }
-
-        
