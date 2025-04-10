@@ -115,7 +115,7 @@ namespace Lab_7
 
             public void Sort()
             {
-                Array.Sort(sportsmen, 0, count, new Comparison<Sportsman>((x, y) => x.Place.CompareTo(y.Place))); 
+                Array.Sort(sportsmen, 0, count, (x, y) => x.Place.CompareTo(y.Place)); // Изменено
             }
 
             public double SummaryScore()
@@ -183,4 +183,3 @@ namespace Lab_7
         }
     }
 }
-
