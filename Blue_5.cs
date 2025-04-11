@@ -47,7 +47,7 @@ namespace Lab_7
         public abstract class Team
         {
             protected string name;
-            protected Sportsman[] sportsmen; 
+            protected List<Sportsman> sportsmen; 
             protected int count;
 
             public string Name => name;
@@ -56,7 +56,7 @@ namespace Lab_7
             public Team(string name)
             {
                 this.name = name;
-                this.sportsmen = new Sportsman[6]; 
+                this.sportsmen = new List<Sportsman>(); 
                 this.count = 0;
             }
 
@@ -64,7 +64,7 @@ namespace Lab_7
             {
                 if (count < 6)
                 {
-                    sportsmen[count] = sportsman; 
+                    sportsmen.Add(sportsman); 
                     count++;
                 }
                 else
@@ -115,7 +115,7 @@ namespace Lab_7
 
             public void Sort()
             {
-                Array.Sort(sportsmen, 0, count, (x, y) => x.Place.CompareTo(y.Place)); // Изменено
+                sportsmen.Sort((x, y) => x.Place.CompareTo(y.Place)); 
             }
 
             public double SummaryScore()
