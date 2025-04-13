@@ -137,7 +137,7 @@ namespace Lab_7
             public string Name => tournamentName;
             public int Bank => prizeFund;
 
-            public IReadOnlyList<Participant> Participants => Array.AsReadOnly(participants);
+            public Participant[] Participants => participants; 
 
             public abstract double[] Prize { get; }
 
