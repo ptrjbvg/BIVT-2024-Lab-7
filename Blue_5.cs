@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace Lab_7
 {
     public class Blue_5
@@ -16,7 +17,7 @@ namespace Lab_7
             private bool ind;
 
             public string Name => name;
-            public string Surname => surname; 
+            public string Surname => surname;
             public int Place => place;
 
             public Sportsman(string name, string surname)
@@ -51,12 +52,12 @@ namespace Lab_7
             protected int count;
 
             public string Name => name;
-            public int Count => count; 
+            public int Count => count;
 
             public Team(string name)
             {
                 this.name = name;
-                this.sportsmen = new List<Sportsman>(); 
+                this.sportsmen = new List<Sportsman>();
                 this.count = 0;
             }
 
@@ -64,7 +65,7 @@ namespace Lab_7
             {
                 if (count < 6)
                 {
-                    sportsmen.Add(sportsman); 
+                    sportsmen.Add(sportsman);
                     count++;
                 }
                 else
@@ -107,9 +108,9 @@ namespace Lab_7
             {
                 Console.WriteLine($"Команда: {name}");
                 Console.WriteLine("Спортсмены:");
-                for (int i = 0; i < count; i++)
+                foreach (var sportsman in sportsmen) 
                 {
-                    sportsmen[i]?.Print(); 
+                    sportsman?.Print(); 
                 }
             }
 
@@ -121,9 +122,9 @@ namespace Lab_7
             public double SummaryScore()
             {
                 double totalScore = 0;
-                for (int i = 0; i < count; i++)
+                foreach (var sportsman in sportsmen) 
                 {
-                    totalScore += sportsmen[i].Place; 
+                    totalScore += sportsman.Place; 
                 }
                 return totalScore;
             }
@@ -133,11 +134,11 @@ namespace Lab_7
                 if (count > 0)
                 {
                     int top = int.MaxValue;
-                    for (int i = 0; i < count; i++)
+                    foreach (var sportsman in sportsmen) 
                     {
-                        if (sportsmen[i].Place > 0 && sportsmen[i].Place < top)
+                        if (sportsman.Place > 0 && sportsman.Place < top)
                         {
-                            top = sportsmen[i].Place; 
+                            top = sportsman.Place; 
                         }
                     }
                     return top;
@@ -183,3 +184,4 @@ namespace Lab_7
         }
     }
 }
+
