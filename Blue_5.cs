@@ -11,140 +11,200 @@ namespace Lab_7
     {
         public class Sportsman
         {
-            private string name;
-            private string surname;
-            private int place;
-            private bool ind;
+            private string _name;
+            private string _surname;
+            private int _place;
 
-            public string Name => name;
-            public string Surname => surname;
-            public int Place => place;
+            public string Name => _name;
+            public string Surname => _surname;
+            public int Place => _place;
 
             public Sportsman(string name, string surname)
             {
-                this.name = name;
-                this.surname = surname;
-                this.place = 0;
-                this.ind = false;
+                _name = name;
+                _surname = surname;
+                _place = 0;
             }
 
             public void SetPlace(int place)
             {
-                if (this.place != 0)
-                {
-                    Console.WriteLine("Место установлено ранее");
-                    return;
-                }
-                this.place = place;
-                this.ind = true;
+                if (_place != 0) return;
+                _place = place;
             }
 
             public void Print()
             {
-                Console.WriteLine($"Спортсмен: {name} {surname}, Место: {place}");
+                Console.WriteLine($"{Name} {Surname} - {Place}");
             }
         }
 
         public abstract class Team
         {
-            protected string name;
-            protected List<Sportsman> sportsmen;
-            protected int count;
+            private string _name;
+            private Sportsman[] _sportsmen;
+            private int _sportsmenCount;
 
-            public string Name => name;
-            public int Count => count;
-            public List<Sportsman> Sportsmen => sportsmen;
+            public string Name => _name;
+            public int SportsmenCount => _sportsmenCount;
+            public Sportsman[] Sportsmen => _sportsmen;
+
+            public int SummaryScore
+            {
+                get
+                {
+                    if (_sportsmen == null || _sportsmen.Length == 0) return 0;
+                    int scores = 0;
+                    foreach (var sportsman in _sportsmen)
+                    {
+                        switch (sportsman?.Place)
+                        {
+                            case 1:
+                                scores += 5;
+                                break;
+                            case 2:
+                                scores += 4;
+                                break;
+                            case 3:
+                                scores += 3;
+                                break;
+                            case 4:
+                                scores += 2;
+                                break;
+                            case 5:
+                                scores += 1;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    return scores;
+                }
+            }
+
+            public int TopPlace
+            {
+                get
+                {
+                    if (_sportsmen == null || _sportsmen.Length == 0) return 0;
+                    int top = 18;
+                    foreach (var sportsman in _sportsmen)
+                    {
+                        if (sportsman == null) continue;
+                        int place = sportsman.Place == 0 ? 18 : sportsman.Place;
+                        if (place < top)
+                        {
+                            top = place;
+                        }
+                    }
+                    return top;
+                }
+            }
 
             public Team(string name)
             {
-                this.name = name;
-                this.sportsmen = new List<Sportsman>();
-                this.count = 0;
-            }
-
-            public void Add(Sportsman sportsman)
-            {
-                if (count < 6)
-                {
-                    sportsmen.Add(sportsman);
-                    count++;
-                }
-                else
-                {
-                    Console.WriteLine("Команда полная, не удается добавить больше спортсменов.");
-                }
-            }
-
-            public void Add(params Sportsman[] newSportsmen)
-            {
-                foreach (var sportsman in newSportsmen)
-                {
-                    Add(sportsman);
-                }
+                _name = name;
+                _sportsmen = new Sportsman[6];
+                _sportsmenCount = 0;
             }
 
             protected abstract double GetTeamStrength();
 
             public static Team GetChampion(Team[] teams)
             {
-                if (teams == null || teams.Length == 0)
-                    return null;
+                if (teams == null || teams.Length == 0) return null;
 
-                Team champion = teams[0];
-                double maxStrength = champion.GetTeamStrength();
+                Team manChampion = null;
+                Team womanChampion = null;
 
+                foreach (var team in teams)
+                {
+                    if (team is ManTeam)
+                    {
+                        if (manChampion == null || team.GetTeamStrength() > manChampion.GetTeamStrength())
+                            manChampion = team;
+                    }
+                    else if (team is WomanTeam)
+                    {
+                        if (womanChampion == null || team.GetTeamStrength() > womanChampion.GetTeamStrength())
+                            womanChampion = team;
+                    }
+                }
+
+                Team overallChampion = null;
+                double maxStrength = double.MinValue;
                 foreach (var team in teams)
                 {
                     double strength = team.GetTeamStrength();
                     if (strength > maxStrength)
                     {
                         maxStrength = strength;
-                        champion = team;
+                        overallChampion = team;
                     }
                 }
-                return champion;
+
+                return overallChampion;
+            }
+
+            public void Add(Sportsman sportsman)
+            {
+                if (_sportsmen == null || _sportsmen.Length == 0) return;
+                if (_sportsmenCount < 6)
+                {
+                    _sportsmen[_sportsmenCount] = sportsman;
+                    _sportsmenCount++;
+                }
+            }
+
+            public void Add(params Sportsman[] sportsmen)
+            {
+                if (sportsmen == null || sportsmen.Length == 0) return;
+                foreach (var sportsman in sportsmen)
+                {
+                    Add(sportsman);
+                }
+            }
+
+            public static void Sort(Team[] teams)
+            {
+                if (teams == null || teams.Length == 0) return;
+                int n = teams.Length;
+                for (int i = 0; i < n - 1; i++)
+                {
+                    for (int j = 0; j < n - i - 1; j++)
+                    {
+                        if (teams[j].SummaryScore < teams[j + 1].SummaryScore)
+                        {
+                            Team temp = teams[j];
+                            teams[j] = teams[j + 1];
+                            teams[j + 1] = temp;
+                        }
+                        else if (teams[j].SummaryScore == teams[j + 1].SummaryScore)
+                        {
+                            if (teams[j].TopPlace > teams[j + 1].TopPlace)
+                            {
+                                Team temp = teams[j];
+                                teams[j] = teams[j + 1];
+                                teams[j + 1] = temp;
+                            }
+                        }
+                    }
+                }
             }
 
             public void Print()
             {
-                Console.WriteLine($"Команда: {name}");
+                Console.WriteLine($"Команда: {_name}");
+                Console.WriteLine($"Суммарный балл: {SummaryScore}");
+                Console.WriteLine($"Наивысшее место: {TopPlace}");
                 Console.WriteLine("Спортсмены:");
-                foreach (var sportsman in sportsmen)
-                {
-                    sportsman?.Print();
-                }
-            }
 
-            public void Sort(Comparison<Sportsman> comparison)
-            {
-                sportsmen.Sort(comparison);
-            }
-
-            public double SummaryScore()
-            {
-                double totalScore = 0;
-                foreach (var sportsman in sportsmen)
+                if (_sportsmen != null && _sportsmen.Length > 0)
                 {
-                    totalScore += sportsman.Place;
-                }
-                return totalScore;
-            }
-
-            public int TopPlace()
-            {
-                if (count > 0)
-                {
-                    int top = int.MaxValue;
-                    foreach (var sportsman in sportsmen)
+                    for (int i = 0; i < _sportsmen.Length; i++)
                     {
-                        if (sportsman.Place > 0 && sportsman.Place < top)
-                        {
-                            top = sportsman.Place;
-                        }
+                        _sportsmen[i]?.Print();
                     }
-                    return top;
                 }
-                return 0;
             }
         }
 
@@ -154,16 +214,20 @@ namespace Lab_7
 
             protected override double GetTeamStrength()
             {
-                if (count == 0) return 0;
+                if (Sportsmen == null || SportsmenCount == 0) return 0;
 
-                double averagePlace = 0;
-                foreach (var sportsman in sportsmen)
+                double sum = 0;
+                int count = 0;
+                foreach (var sportsman in Sportsmen)
                 {
-                    averagePlace += sportsman.Place;
+                    if (sportsman != null && sportsman.Place != 0)
+                    {
+                        sum += sportsman.Place;
+                        count++;
+                    }
                 }
-                averagePlace /= count;
 
-                return averagePlace > 0 ? 100 / averagePlace : 0;
+                return count == 0 ? 0 : 100 / (sum / count);
             }
         }
 
@@ -173,19 +237,27 @@ namespace Lab_7
 
             protected override double GetTeamStrength()
             {
-                if (count == 0) return 0;
+                if (Sportsmen == null || SportsmenCount == 0) return 0;
 
-                double sumPlaces = 0;
-                double productPlaces = 1;
+                double sum = 0;
+                double product = 1;
+                int count = 0;
 
-                foreach (var sportsman in sportsmen)
+                foreach (var sportsman in Sportsmen)
                 {
-                    sumPlaces += sportsman.Place;
-                    productPlaces *= sportsman.Place > 0 ? sportsman.Place : 1;
+                    if (sportsman != null && sportsman.Place != 0)
+                    {
+                        sum += sportsman.Place;
+                        product *= sportsman.Place;
+                        count++;
+                    }
                 }
 
-                return productPlaces > 0 ? (100 * sumPlaces * count) / productPlaces : 0;
+                return count == 0 ? 0 : 100 * sum * count / product;
             }
         }
     }
 }
+
+    
+
