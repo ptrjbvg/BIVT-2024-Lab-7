@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
 namespace Lab_7
 {
     public class Blue_5
@@ -53,6 +52,7 @@ namespace Lab_7
 
             public string Name => name;
             public int Count => count;
+            public List<Sportsman> Sportsmen => sportsmen; 
 
             public Team(string name)
             {
@@ -114,9 +114,9 @@ namespace Lab_7
                 }
             }
 
-            public void Sort()
+            public void Sort(Comparison<Sportsman> comparison)
             {
-                sportsmen.Sort((x, y) => x.Place.CompareTo(y.Place)); 
+                sportsmen.Sort(comparison); 
             }
 
             public double SummaryScore()
@@ -184,4 +184,3 @@ namespace Lab_7
         }
     }
 }
-
