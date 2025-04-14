@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace Lab_7
 {
     public class Blue_5
@@ -47,12 +48,12 @@ namespace Lab_7
         public abstract class Team
         {
             protected string name;
-            protected List<Sportsman> sportsmen; 
+            protected List<Sportsman> sportsmen;
             protected int count;
 
             public string Name => name;
             public int Count => count;
-            public List<Sportsman> Sportsmen => sportsmen; 
+            public List<Sportsman> Sportsmen => sportsmen;
 
             public Team(string name)
             {
@@ -108,23 +109,23 @@ namespace Lab_7
             {
                 Console.WriteLine($"Команда: {name}");
                 Console.WriteLine("Спортсмены:");
-                foreach (var sportsman in sportsmen) 
+                foreach (var sportsman in sportsmen)
                 {
-                    sportsman?.Print(); 
+                    sportsman?.Print();
                 }
             }
 
             public void Sort(Comparison<Sportsman> comparison)
             {
-                sportsmen.Sort(comparison); 
+                sportsmen.Sort(comparison);
             }
 
             public double SummaryScore()
             {
                 double totalScore = 0;
-                foreach (var sportsman in sportsmen) 
+                foreach (var sportsman in sportsmen)
                 {
-                    totalScore += sportsman.Place; 
+                    totalScore += sportsman.Place;
                 }
                 return totalScore;
             }
@@ -134,16 +135,16 @@ namespace Lab_7
                 if (count > 0)
                 {
                     int top = int.MaxValue;
-                    foreach (var sportsman in sportsmen) 
+                    foreach (var sportsman in sportsmen)
                     {
                         if (sportsman.Place > 0 && sportsman.Place < top)
                         {
-                            top = sportsman.Place; 
+                            top = sportsman.Place;
                         }
                     }
                     return top;
                 }
-                return 0; 
+                return 0;
             }
         }
 
@@ -153,14 +154,16 @@ namespace Lab_7
 
             protected override double GetTeamStrength()
             {
+                if (count == 0) return 0;
+
                 double averagePlace = 0;
-                for (int i = 0; i < count; i++)
+                foreach (var sportsman in sportsmen)
                 {
-                    averagePlace += sportsmen[i].Place;
+                    averagePlace += sportsman.Place;
                 }
                 averagePlace /= count;
 
-                return averagePlace > 0 ? 100 / averagePlace : 0; 
+                return averagePlace > 0 ? 100 / averagePlace : 0;
             }
         }
 
@@ -170,16 +173,18 @@ namespace Lab_7
 
             protected override double GetTeamStrength()
             {
+                if (count == 0) return 0;
+
                 double sumPlaces = 0;
                 double productPlaces = 1;
 
-                for (int i = 0; i < count; i++)
+                foreach (var sportsman in sportsmen)
                 {
-                    sumPlaces += sportsmen[i].Place;
-                    productPlaces *= sportsmen[i].Place > 0 ? sportsmen[i].Place : 1; 
+                    sumPlaces += sportsman.Place;
+                    productPlaces *= sportsman.Place > 0 ? sportsman.Place : 1;
                 }
 
-                return productPlaces > 0 ? (100 * sumPlaces * count) / productPlaces : 0; 
+                return productPlaces > 0 ? (100 * sumPlaces * count) / productPlaces : 0;
             }
         }
     }
