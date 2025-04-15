@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
 namespace Lab_7
 {
     public class Blue_5
@@ -45,7 +44,6 @@ namespace Lab_7
             private int _sportsmenCount;
 
             public string Name => _name;
-            public int SportsmenCount => _sportsmenCount;
             public Sportsman[] Sportsmen => _sportsmen;
 
             public int SummaryScore
@@ -58,23 +56,12 @@ namespace Lab_7
                     {
                         switch (sportsman?.Place)
                         {
-                            case 1:
-                                scores += 5;
-                                break;
-                            case 2:
-                                scores += 4;
-                                break;
-                            case 3:
-                                scores += 3;
-                                break;
-                            case 4:
-                                scores += 2;
-                                break;
-                            case 5:
-                                scores += 1;
-                                break;
-                            default:
-                                break;
+                            case 1: scores += 5; break;
+                            case 2: scores += 4; break;
+                            case 3: scores += 3; break;
+                            case 4: scores += 2; break;
+                            case 5: scores += 1; break;
+                            default: break;
                         }
                     }
                     return scores;
@@ -214,7 +201,7 @@ namespace Lab_7
 
             protected override double GetTeamStrength()
             {
-                if (Sportsmen == null || SportsmenCount == 0) return 0;
+                if (Sportsmen == null || Sportsmen.Length == 0) return 0;
 
                 double sum = 0;
                 int count = 0;
@@ -237,7 +224,7 @@ namespace Lab_7
 
             protected override double GetTeamStrength()
             {
-                if (Sportsmen == null || SportsmenCount == 0) return 0;
+                if (Sportsmen == null || Sportsmen.Length == 0) return 0;
 
                 double sum = 0;
                 double product = 1;
@@ -258,6 +245,3 @@ namespace Lab_7
         }
     }
 }
-
-    
-
