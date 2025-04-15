@@ -77,13 +77,12 @@ namespace Lab_7
                     foreach (var sportsman in _sportsmen)
                     {
                         if (sportsman == null) continue;
-                        int place = sportsman.Place == 0 ? 18 : sportsman.Place;
-                        if (place < top)
+                        if (sportsman.Place > 0 && sportsman.Place < top)
                         {
-                            top = place;
+                            top = sportsman.Place;
                         }
                     }
-                    return top;
+                    return top == 18 ? 0 : top;
                 }
             }
 
