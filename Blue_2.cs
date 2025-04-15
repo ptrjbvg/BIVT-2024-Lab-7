@@ -69,7 +69,7 @@ namespace Lab_7
 
             public void Jump(int[] result)
             {
-                if (marks == null || marks.GetLength(0) == 0 || marks.GetLength(1) == 0 || result == null || result.Length == 0 || ind >= 2) // Изменено 'ind > 1' на 'ind >= 2'
+                if (marks == null || marks.GetLength(0) == 0 || marks.GetLength(1) == 0 || result == null || result.Length == 0 || ind >= 2) 
                 {
                     return;
                 }
