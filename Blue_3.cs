@@ -137,8 +137,8 @@ namespace Lab_7
 
             public override void PlayMatch(int fouls)
             {
-                if (fouls < 0 || fouls > 5)
-                    throw new ArgumentOutOfRangeException(nameof(fouls), "Fouls must be between 0 and 5.");
+                if (fouls < 0 || fouls > 6)
+                    throw new ArgumentOutOfRangeException(nameof(fouls), "Fouls must be between 0 and 6.");
 
                 base.PlayMatch(fouls);
                 matchesPlayed++;
