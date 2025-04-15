@@ -63,13 +63,13 @@ namespace Lab_7
             {
                 this.name = name;
                 this.surname = surname;
-                this.marks = new int[2, 5]; 
+                this.marks = new int[2, 5];
                 this.ind = 0;
             }
 
             public void Jump(int[] result)
             {
-                if (marks == null || marks.GetLength(0) == 0 || marks.GetLength(1) == 0 || result == null || result.Length == 0 || ind > 1)
+                if (marks == null || marks.GetLength(0) == 0 || marks.GetLength(1) == 0 || result == null || result.Length == 0 || ind >= 2) // Изменено 'ind > 1' на 'ind >= 2'
                 {
                     return;
                 }
@@ -216,7 +216,7 @@ namespace Lab_7
                         else if (i == 2) prizes[i] = Bank * percentageThirdPlace; 
                     }
 
-                    for (int i = topCount; i < prizes.Length && i < participantCount; i++)
+                    for (int i = topCount; i < prizes.Length && participantCount > 3 && i < participantCount; i++)
                     {
                         prizes[i] = N * (Bank / 100);
                     }
