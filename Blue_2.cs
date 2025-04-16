@@ -116,7 +116,7 @@ namespace Lab_7
             {
                 this.tournamentName = tournamentName;
                 this.prizeFund = prizeFund;
-                this.participants = new Participant[0]; // Исправлено: пустой массив
+                this.participants = new Participant[0]; 
                 this.participantCount = 0;
             }
 
