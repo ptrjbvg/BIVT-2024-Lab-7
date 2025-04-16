@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace Lab_7
 {
     public class Blue_2
@@ -40,12 +41,8 @@ namespace Lab_7
 
                     int sum = 0;
                     for (int i = 0; i < marks.GetLength(0); i++)
-                    {
                         for (int j = 0; j < marks.GetLength(1); j++)
-                        {
                             sum += marks[i, j];
-                        }
-                    }
                     return sum;
                 }
             }
@@ -54,7 +51,7 @@ namespace Lab_7
             {
                 this.name = name;
                 this.surname = surname;
-                this.marks = new int[2, 5]; 
+                this.marks = new int[2, 5];
                 this.ind = 0;
             }
 
@@ -65,8 +62,7 @@ namespace Lab_7
 
                 if (ind >= marks.GetLength(0))
                 {
-                    int newSize = marks.GetLength(0) + 1; 
-                    int[,] newMarks = new int[newSize, 5];
+                    int[,] newMarks = new int[marks.GetLength(0) + 1, 5];
                     Array.Copy(marks, newMarks, marks.Length);
                     marks = newMarks;
                 }
@@ -74,25 +70,6 @@ namespace Lab_7
                 int elementsToCopy = Math.Min(result.Length, 5);
                 Array.Copy(result, 0, marks, ind * 5, elementsToCopy);
                 ind++;
-            }
-
-            public static void Sort(Participant[] array)
-            {
-                if (array == null || array.Length <= 1)
-                    return;
-
-                for (int i = 0; i < array.Length - 1; i++)
-                {
-                    for (int j = 0; j < array.Length - i - 1; j++)
-                    {
-                        if (array[j].TotalScore < array[j + 1].TotalScore)
-                        {
-                            Participant temp = array[j];
-                            array[j] = array[j + 1];
-                            array[j + 1] = temp;
-                        }
-                    }
-                }
             }
 
             public void Print()
@@ -116,12 +93,12 @@ namespace Lab_7
         {
             private string tournamentName;
             private int prizeFund;
-            private Participant[] participants;
+            private Participant[] _participants;
             protected int participantCount;
 
             public string Name => tournamentName;
             public int Bank => prizeFund;
-            public Participant[] Participants => participants;
+            public Participant[] Participants => _participants;
 
             public abstract double[] Prize { get; }
 
@@ -129,27 +106,33 @@ namespace Lab_7
             {
                 this.tournamentName = tournamentName;
                 this.prizeFund = prizeFund;
-                this.participants = new Participant[0];
-                this.participantCount = 0;
+                _participants = null;
+                participantCount = 0;
             }
 
             public void Add(Participant participant)
             {
-                if (participants.Length == 0)
+                if (_participants == null)
                 {
-                    participants = new Participant[6];
+                    _participants = new Participant[1];
                 }
-
-                if (participantCount < participants.Length)
+                else
                 {
-                    participants[participantCount++] = participant;
+                    Participant[] participant2 = new Participant[_participants.Length + 1];
+                    for (int i = 0; i < _participants.Length; i++)
+                        participant2[i] = _participants[i];
+                    _participants = participant2;
                 }
+                _participants[_participants.Length - 1] = participant;
+                participantCount++;
             }
 
-            public void Add(params Participant[] newParticipants)
+            public void Add(Participant[] participants)
             {
-                foreach (var p in newParticipants)
-                    Add(p);
+                if (_participants == null || participants == null || participants.Length == 0) return;
+
+                for (int i = 0; i < participants.Length; i++)
+                    Add(participants[i]);
             }
         }
 
@@ -165,12 +148,7 @@ namespace Lab_7
                     if (participantCount < 3)
                         return new double[0];
 
-                    return new double[]
-                    {
-                        Bank * 0.5,
-                        Bank * 0.3,
-                        Bank * 0.2
-                    };
+                    return new double[] { Bank * 0.5, Bank * 0.3, Bank * 0.2 };
                 }
             }
         }
