@@ -106,7 +106,7 @@ namespace Lab_7
             {
                 this.tournamentName = tournamentName;
                 this.prizeFund = prizeFund;
-                _participants = null;
+                this.participants = new Participant[0];
                 participantCount = 0;
             }
 
@@ -129,7 +129,7 @@ namespace Lab_7
 
             public void Add(Participant[] participants)
             {
-                if (_participants == null || participants == null || participants.Length == 0) return;
+                if (_participants == null || participants == null) return;
 
                 for (int i = 0; i < participants.Length; i++)
                     Add(participants[i]);
@@ -145,7 +145,7 @@ namespace Lab_7
             {
                 get
                 {
-                    if (participantCount < 3)
+                    if (participantCount < 3 || _participants = null)
                         return new double[0];
 
                     return new double[] { Bank * 0.5, Bank * 0.3, Bank * 0.2 };
@@ -162,7 +162,7 @@ namespace Lab_7
             {
                 get
                 {
-                    if (participantCount < 3)
+                    if (participantCount < 3 || +_participants == null)
                         return new double[0];
 
                     int prizeCount = Math.Min(10, participantCount);
