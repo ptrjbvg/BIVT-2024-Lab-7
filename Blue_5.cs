@@ -82,7 +82,7 @@ namespace Lab_7
                             top = sportsman.Place;
                         }
                     }
-                    return top == 18 ? 0 : top;
+                    return top == 18 ? 18 : top;
                 }
             }
 
