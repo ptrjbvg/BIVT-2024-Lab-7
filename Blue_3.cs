@@ -137,7 +137,7 @@ namespace Lab_7
 
             public override void PlayMatch(int fouls)
             {
-                if (fouls < 0 || fouls > 6 || _penaltyTimes == null)
+                if (fouls < 0 || fouls > 6)
                     return;
 
                 base.PlayMatch(fouls);
