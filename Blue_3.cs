@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace Lab_7
 {
     public class Blue_3
@@ -13,11 +12,8 @@ namespace Lab_7
             protected string name;
             protected string surname;
             protected int[] penaltyTimes;
-
             public string Name => name;
-
             public string Surname => surname;
-
             public int[] Penalties
             {
                 get
@@ -29,7 +25,6 @@ namespace Lab_7
                     return penaltyTimesCopy;
                 }
             }
-
             public int Total
             {
                 get
@@ -44,14 +39,12 @@ namespace Lab_7
                     return totalScore;
                 }
             }
-
             public virtual bool IsExpelled
             {
                 get
                 {
                     if (penaltyTimes == null)
                         return false;
-
                     foreach (int penalty in penaltyTimes)
                     {
                         if (penalty == 10)
@@ -62,22 +55,18 @@ namespace Lab_7
                     return false;
                 }
             }
-
             public virtual void PlayMatch(int value)
             {
                 if (penaltyTimes == null)
                     return;
-
                 int[] newArray = new int[penaltyTimes.Length + 1];
                 Array.Copy(penaltyTimes, newArray, penaltyTimes.Length);
                 newArray[newArray.Length - 1] = value;
                 penaltyTimes = newArray;
             }
-
             public static void Sort(Participant[] array)
             {
                 if (array == null) return;
-
                 for (int i = 0; i < array.Length - 1; i++)
                 {
                     for (int j = 0; j < array.Length - i - 1; j++)
@@ -89,7 +78,6 @@ namespace Lab_7
                     }
                 }
             }
-
             public void Print()
             {
                 Console.WriteLine($"Name: {name}");
@@ -101,7 +89,6 @@ namespace Lab_7
                 }
                 Console.WriteLine();
             }
-
             public Participant(string name, string surname)
             {
                 this.name = name;
@@ -109,19 +96,15 @@ namespace Lab_7
                 this.penaltyTimes = new int[0];
             }
         }
-
         public class BasketballPlayer : Participant
         {
             private int matchesPlayed;
-
             public BasketballPlayer(string name, string surname) : base(name, surname) { }
-
             public override bool IsExpelled
             {
                 get
                 {
                     if (matchesPlayed == 0) return false;
-
                     int fiveFoulsCount = 0;
                     foreach (var penalty in penaltyTimes)
                     {
@@ -130,25 +113,24 @@ namespace Lab_7
                             fiveFoulsCount++;
                         }
                     }
-
                     return fiveFoulsCount > matchesPlayed * 0.1 || Total > matchesPlayed * 2;
                 }
             }
 
             public override void PlayMatch(int fouls)
             {
+                if (fouls < 0 || fouls > 5)
+                    throw new ArgumentOutOfRangeException(nameof(fouls), "Fouls must be between 0 and 5.");
                 if (fouls < 0 || fouls > 6)
-                    return;
+                    throw new ArgumentOutOfRangeException(nameof(fouls), "Fouls must be between 0 and 6.");
 
                 base.PlayMatch(fouls);
                 matchesPlayed++;
             }
         }
-
         public class HockeyPlayer : Participant
         {
             public HockeyPlayer(string name, string surname) : base(name, surname) { }
-
             public override bool IsExpelled
             {
                 get
@@ -157,19 +139,15 @@ namespace Lab_7
                     {
                         return true;
                     }
-
                     int totalPenaltyTime = 0; 
                     int totalPlayers = 1;      
-
                     return Total > ((totalPenaltyTime / (double)totalPlayers) * 0.1);
                 }
             }
-
             public override void PlayMatch(int penaltyMinutes)
             {
                 if (penaltyMinutes < 0)
                     throw new ArgumentOutOfRangeException(nameof(penaltyMinutes), "Penalty minutes cannot be negative.");
-
                 base.PlayMatch(penaltyMinutes);
             }
         }
