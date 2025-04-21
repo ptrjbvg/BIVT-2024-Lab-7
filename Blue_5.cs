@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace Lab_7
 {
     public class Blue_5
@@ -13,39 +12,32 @@ namespace Lab_7
             private string _name;
             private string _surname;
             private int _place;
-
             public string Name => _name;
             public string Surname => _surname;
             public int Place => _place;
-
             public Sportsman(string name, string surname)
             {
                 _name = name;
                 _surname = surname;
                 _place = 0;
             }
-
             public void SetPlace(int place)
             {
                 if (_place != 0) return;
                 _place = place;
             }
-
             public void Print()
             {
                 Console.WriteLine($"{Name} {Surname} - {Place}");
             }
         }
-
         public abstract class Team
         {
             private string _name;
             private Sportsman[] _sportsmen;
             private int _sportsmenCount;
-
             public string Name => _name;
             public Sportsman[] Sportsmen => _sportsmen;
-
             public int SummaryScore
             {
                 get
@@ -67,7 +59,6 @@ namespace Lab_7
                     return scores;
                 }
             }
-
             public int TopPlace
             {
                 get
@@ -77,12 +68,16 @@ namespace Lab_7
                     foreach (var sportsman in _sportsmen)
                     {
                         if (sportsman == null) continue;
+                        int place = sportsman.Place == 0 ? 18 : sportsman.Place;
+                        if (place < top)
                         if (sportsman.Place > 0 && sportsman.Place < top)
                         {
+                            top = place;
                             top = sportsman.Place;
                         }
                     }
-                    return top == 18 ? 18 : top;
+                    return top;
+                    return top == 18 ? 0 : top;
                 }
             }
 
@@ -92,16 +87,12 @@ namespace Lab_7
                 _sportsmen = new Sportsman[6];
                 _sportsmenCount = 0;
             }
-
             protected abstract double GetTeamStrength();
-
             public static Team GetChampion(Team[] teams)
             {
                 if (teams == null || teams.Length == 0) return null;
-
                 Team manChampion = null;
                 Team womanChampion = null;
-
                 foreach (var team in teams)
                 {
                     if (team is ManTeam)
@@ -115,7 +106,6 @@ namespace Lab_7
                             womanChampion = team;
                     }
                 }
-
                 Team overallChampion = null;
                 double maxStrength = double.MinValue;
                 foreach (var team in teams)
@@ -127,10 +117,8 @@ namespace Lab_7
                         overallChampion = team;
                     }
                 }
-
                 return overallChampion;
             }
-
             public void Add(Sportsman sportsman)
             {
                 if (_sportsmen == null || _sportsmen.Length == 0) return;
@@ -140,7 +128,6 @@ namespace Lab_7
                     _sportsmenCount++;
                 }
             }
-
             public void Add(params Sportsman[] sportsmen)
             {
                 if (sportsmen == null || sportsmen.Length == 0) return;
@@ -149,7 +136,6 @@ namespace Lab_7
                     Add(sportsman);
                 }
             }
-
             public static void Sort(Team[] teams)
             {
                 if (teams == null || teams.Length == 0) return;
@@ -176,14 +162,12 @@ namespace Lab_7
                     }
                 }
             }
-
             public void Print()
             {
                 Console.WriteLine($"Команда: {_name}");
                 Console.WriteLine($"Суммарный балл: {SummaryScore}");
                 Console.WriteLine($"Наивысшее место: {TopPlace}");
                 Console.WriteLine("Спортсмены:");
-
                 if (_sportsmen != null && _sportsmen.Length > 0)
                 {
                     for (int i = 0; i < _sportsmen.Length; i++)
@@ -193,15 +177,12 @@ namespace Lab_7
                 }
             }
         }
-
         public class ManTeam : Team
         {
             public ManTeam(string name) : base(name) { }
-
             protected override double GetTeamStrength()
             {
                 if (Sportsmen == null || Sportsmen.Length == 0) return 0;
-
                 double sum = 0;
                 int count = 0;
                 foreach (var sportsman in Sportsmen)
@@ -212,23 +193,18 @@ namespace Lab_7
                         count++;
                     }
                 }
-
                 return count == 0 ? 0 : 100 / (sum / count);
             }
         }
-
         public class WomanTeam : Team
         {
             public WomanTeam(string name) : base(name) { }
-
             protected override double GetTeamStrength()
             {
                 if (Sportsmen == null || Sportsmen.Length == 0) return 0;
-
                 double sum = 0;
                 double product = 1;
                 int count = 0;
-
                 foreach (var sportsman in Sportsmen)
                 {
                     if (sportsman != null && sportsman.Place != 0)
@@ -238,7 +214,6 @@ namespace Lab_7
                         count++;
                     }
                 }
-
                 return count == 0 ? 0 : 100 * sum * count / product;
             }
         }
