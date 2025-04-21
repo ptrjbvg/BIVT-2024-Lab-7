@@ -3,51 +3,130 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 namespace Lab_7
 {
     public class Blue_3
     {
         public class Participant
         {
-            protected string name;
-            protected string surname;
+            private string name;
+            private string surname;
             protected int[] penaltyTimes;
+
             public string Name => name;
             public string Surname => surname;
             public int[] Penalties
             {
                 get
                 {
-                    if (penaltyTimes == null)
-                        return null;
-                    int[] penaltyTimesCopy = new int[penaltyTimes.Length];
-                    Array.Copy(penaltyTimes, penaltyTimesCopy, penaltyTimes.Length);
-                    return penaltyTimesCopy;
+                    if (penaltyTimes == null) return null;
+                    int[] copy = new int[penaltyTimes.Length];
+                    Array.Copy(penaltyTimes, copy, copy.Length);
+                    return copy;
                 }
             }
+
             public int Total
             {
                 get
                 {
-                    if (penaltyTimes == null)
-                        return 0;
-                    int totalScore = 0;
-                    foreach (int penalty in penaltyTimes)
+                    if (penaltyTimes == null) return 0;
+                    int sum = 0;
+                    for (int i = 0; i < penaltyTimes.Length; i++)
                     {
-                        totalScore += penalty;
+                        sum += penaltyTimes[i];
                     }
-                    return totalScore;
+                    return sum;
                 }
             }
+
             public virtual bool IsExpelled
             {
                 get
                 {
-                    if (penaltyTimes == null)
-                        return false;
-                    foreach (int penalty in penaltyTimes)
+                    if (penaltyTimes == null) return false;
+                    bool isExpelled = false;
+                    for (int i = 0; i < penaltyTimes.Length; i++)
                     {
-                        if (penalty == 10)
+                        if (penaltyTimes[i] == 10)
+                        {
+                            isExpelled = true;
+                            break;
+                        }
+                    }
+                    return isExpelled;
+                }
+            }
+
+            public Participant(string name, string surname)
+            {
+                this.name = name;
+                this.surname = surname;
+                this.penaltyTimes = new int[0];
+            }
+
+            public virtual void PlayMatch(int time)
+            {
+                if (penaltyTimes == null) return;
+                int[] arr = new int[penaltyTimes.Length + 1];
+                for (int i = 0; i < penaltyTimes.Length; i++)
+                {
+                    arr[i] = penaltyTimes[i];
+                }
+                arr[arr.Length - 1] = time;
+                penaltyTimes = arr;
+            }
+
+            public static void Sort(Participant[] array)
+            {
+                if (array == null || array.Length <= 1)
+                    return;
+
+                int n = array.Length;
+                bool swapped;
+
+                for (int i = 0; i < n - 1; i++)
+                {
+                    swapped = false;
+
+                    for (int j = 0; j < n - 1 - i; j++)
+                    {
+                        if (array[j].Total > array[j + 1].Total)
+                        {
+                            Participant temp = array[j];
+                            array[j] = array[j + 1];
+                            array[j + 1] = temp;
+
+                            swapped = true;
+                        }
+                    }
+                    if (!swapped)
+                        break;
+                }
+            }
+
+            public void Print()
+            {
+                Console.WriteLine($"{name} {surname} - {Total}");
+            }
+        }
+
+        public class BasketballPlayer : Participant
+        {
+            public override bool IsExpelled
+            {
+                get
+                {
+                    if (penaltyTimes == null) return false;
+                    int count = 0;
+                    for (int i = 0; i < penaltyTimes.Length; i++)
+                    {
+                        if (penaltyTimes[i] >= 5) count++;
+                    }
+                    for (int i = 0; i < penaltyTimes.Length; i++)
+                    {
+                        if (this.Total > 2 * penaltyTimes.Length || count > 0.1 * penaltyTimes.Length)
                         {
                             return true;
                         }
@@ -55,100 +134,56 @@ namespace Lab_7
                     return false;
                 }
             }
-            public virtual void PlayMatch(int value)
+
+            public BasketballPlayer(string name, string surname) : base(name, surname) 
             {
-                if (penaltyTimes == null)
-                    return;
-                int[] newArray = new int[penaltyTimes.Length + 1];
-                Array.Copy(penaltyTimes, newArray, penaltyTimes.Length);
-                newArray[newArray.Length - 1] = value;
-                penaltyTimes = newArray;
-            }
-            public static void Sort(Participant[] array)
-            {
-                if (array == null) return;
-                for (int i = 0; i < array.Length - 1; i++)
-                {
-                    for (int j = 0; j < array.Length - i - 1; j++)
-                    {
-                        if (array[j].Total > array[j + 1].Total)
-                        {
-                            (array[j], array[j + 1]) = (array[j + 1], array[j]);
-                        }
-                    }
-                }
-            }
-            public void Print()
-            {
-                Console.WriteLine($"Name: {name}");
-                Console.WriteLine($"Surname: {surname}");
-                Console.Write("Penalties: ");
-                foreach (var penalty in penaltyTimes)
-                {
-                    Console.Write(penalty + " ");
-                }
-                Console.WriteLine();
-            }
-            public Participant(string name, string surname)
-            {
-                this.name = name;
-                this.surname = surname;
-                this.penaltyTimes = new int[0];
-            }
-        }
-        public class BasketballPlayer : Participant
-        {
-            private int matchesPlayed;
-            public BasketballPlayer(string name, string surname) : base(name, surname) { }
-            public override bool IsExpelled
-            {
-                get
-                {
-                    if (matchesPlayed == 0) return false;
-                    int fiveFoulsCount = 0;
-                    foreach (var penalty in penaltyTimes)
-                    {
-                        if (penalty == 5)
-                        {
-                            fiveFoulsCount++;
-                        }
-                    }
-                    return fiveFoulsCount > matchesPlayed * 0.1 || Total > matchesPlayed * 2;
-                }
+                penaltyTimes = new int[0];
             }
 
-            public override void PlayMatch(int fouls)
+            public override void PlayMatch(int foul)
             {
-                if (fouls < 0 || fouls > 5)
-                    throw new ArgumentOutOfRangeException(nameof(fouls), "Fouls must be between 0 and 5.");
-                if (fouls < 0 || fouls > 6)
-                    throw new ArgumentOutOfRangeException(nameof(fouls), "Fouls must be between 0 and 6.");
-
-                base.PlayMatch(fouls);
-                matchesPlayed++;
+                if (penaltyTimes == null || foul < 0 || foul > 5) return;
+                base.PlayMatch(foul);
             }
         }
+
         public class HockeyPlayer : Participant
         {
-            public HockeyPlayer(string name, string surname) : base(name, surname) { }
+            private int allminuts;
+            private int count;
+            
+            public HockeyPlayer(string name, string surname) : base(name, surname)
+            {
+                count++;
+                penaltyTimes = new int[0];
+            }
+
             public override bool IsExpelled
             {
                 get
                 {
-                    if (Array.Exists(penaltyTimes, penalty => penalty >= 10))
+                    if (penaltyTimes == null) return false;
+                    for (int i = 0; i < penaltyTimes.Length; i++)
                     {
-                        return true;
+                        if (penaltyTimes[i] >= 10) return true;
                     }
-                    int totalPenaltyTime = 0; 
-                    int totalPlayers = 1;      
-                    return Total > ((totalPenaltyTime / (double)totalPlayers) * 0.1);
+                    for (int i = 0; i < penaltyTimes.Length; i++)
+                    {
+                        if (count == 0) return false;
+                        if (penaltyTimes.Sum() > 0.1 * allminuts / count)
+                        {
+                            return true;
+                        }
+                    }
+                    return false;
                 }
             }
-            public override void PlayMatch(int penaltyMinutes)
+
+            public override void PlayMatch(int minuts)
             {
-                if (penaltyMinutes < 0)
-                    throw new ArgumentOutOfRangeException(nameof(penaltyMinutes), "Penalty minutes cannot be negative.");
-                base.PlayMatch(penaltyMinutes);
+                if (minuts < 0 || minuts > 5) return;
+                base.PlayMatch(minuts);
+                allminuts += minuts;
             }
         }
     }
