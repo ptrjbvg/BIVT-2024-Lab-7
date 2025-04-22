@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,9 +14,27 @@ namespace Lab_7
             private string _surname;
             private int _place;
 
-            public string Name => _name;
-            public string Surname => _surname;
-            public int Place => _place;
+            public string Name
+            {
+                get
+                {
+                    return _name;
+                }
+            }
+            public string Surname
+            {
+                get
+                {
+                    return _surname;
+                }
+            }
+            public int Place
+            {
+                get
+                {
+                    return _place;
+                }
+            }
 
             public Sportsman(string name, string surname)
             {
@@ -45,7 +63,14 @@ namespace Lab_7
 
             public string Name => _name;
             public int SportsmenCount => _sportsmenCount;
-            public Sportsman[] Sportsmen => _sportsmen;
+            public Sportsman[] Sportsmen
+            {
+                get
+                {
+                    if (_sportsmen == null) return null;
+                    return _sportsmen;
+                }
+            }
 
             public int SummaryScore
             {
@@ -57,16 +82,28 @@ namespace Lab_7
                     {
                         switch (sportsman.Place)
                         {
-                            case 1: scores += 5; break;
-                            case 2: scores += 4; break;
-                            case 3: scores += 3; break;
-                            case 4: scores += 2; break;
-                            case 5: scores += 1; break;
-                            default: break;
+                            case 1:
+                                scores += 5;
+                                break;
+                            case 2:
+                                scores += 4;
+                                break;
+                            case 3:
+                                scores += 3;
+                                break;
+                            case 4:
+                                scores += 2;
+                                break;
+                            case 5:
+                                scores += 1;
+                                break;
+                            default:
+                                break;
                         }
                     }
                     return scores;
                 }
+
             }
 
             public int TopPlace
@@ -78,17 +115,22 @@ namespace Lab_7
                     foreach (var sportsman in _sportsmen)
                     {
                         int place = sportsman.Place == 0 ? 18 : sportsman.Place;
-                        if (place < top) top = place;
+                        if (place < top)
+                        {
+                            top = place;
+                        }
                     }
                     return top;
                 }
             }
+
 
             public Team(string name)
             {
                 _name = name;
                 _sportsmen = new Sportsman[6];
                 _sportsmenCount = 0;
+
             }
 
             protected abstract double GetTeamStrength();
@@ -148,6 +190,7 @@ namespace Lab_7
                 }
             }
 
+
             public static void Sort(Team[] teams)
             {
                 if (teams == null || teams.Length == 0) return;
@@ -186,15 +229,16 @@ namespace Lab_7
                 {
                     for (int i = 0; i < _sportsmen.Length; i++)
                     {
-                        _sportsmen[i]?.Print();
+                        _sportsmen[i].Print();
                     }
                 }
             }
+
         }
 
-        public class ManTeam : Team
+        public class ManTeam: Team
         {
-            public ManTeam(string name) : base(name) { }
+            public ManTeam(string name): base (name) { }
 
             protected override double GetTeamStrength()
             {
