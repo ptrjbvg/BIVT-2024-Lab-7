@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,19 +10,19 @@ namespace Lab_7
     {
         public class Participant
         {
-            private string name;
-            private string surname;
-            protected int[] penaltyTimes;
+            private string _name;
+            private string _surname;
+            protected int[] _minuts;
 
-            public string Name => name;
-            public string Surname => surname;
+            public string Name => _name;
+            public string Surname => _surname;
             public int[] Penalties
             {
                 get
                 {
-                    if (penaltyTimes == null) return null;
-                    int[] copy = new int[penaltyTimes.Length];
-                    Array.Copy(penaltyTimes, copy, copy.Length);
+                    if (_minuts == null) return null;
+                    int[] copy = new int[_minuts.Length];
+                    Array.Copy(_minuts, copy, copy.Length);
                     return copy;
                 }
             }
@@ -31,11 +31,11 @@ namespace Lab_7
             {
                 get
                 {
-                    if (penaltyTimes == null) return 0;
+                    if (_minuts == null) return 0;
                     int sum = 0;
-                    for (int i = 0; i < penaltyTimes.Length; i++)
+                    for (int i = 0; i < _minuts.Length; i++)
                     {
-                        sum += penaltyTimes[i];
+                        sum += _minuts[i];
                     }
                     return sum;
                 }
@@ -45,11 +45,11 @@ namespace Lab_7
             {
                 get
                 {
-                    if (penaltyTimes == null) return false;
+                    if (_minuts == null) return false;
                     bool isExpelled = false;
-                    for (int i = 0; i < penaltyTimes.Length; i++)
+                    for (int i = 0; i < _minuts.Length; i++)
                     {
-                        if (penaltyTimes[i] == 10)
+                        if (_minuts[i] == 10)
                         {
                             isExpelled = true;
                             break;
@@ -61,21 +61,22 @@ namespace Lab_7
 
             public Participant(string name, string surname)
             {
-                this.name = name;
-                this.surname = surname;
-                this.penaltyTimes = new int[0];
+                _name = name;
+                _surname = surname;
+                _minuts = new int[0];
             }
+
 
             public virtual void PlayMatch(int time)
             {
-                if (penaltyTimes == null) return;
-                int[] arr = new int[penaltyTimes.Length + 1];
-                for (int i = 0; i < penaltyTimes.Length; i++)
+                if (_minuts == null) return;
+                int[] arr = new int[_minuts.Length + 1];
+                for (int i = 0; i < _minuts.Length; i++)
                 {
-                    arr[i] = penaltyTimes[i];
+                    arr[i] = _minuts[i];
                 }
                 arr[arr.Length - 1] = time;
-                penaltyTimes = arr;
+                _minuts = arr;
             }
 
             public static void Sort(Participant[] array)
@@ -108,25 +109,26 @@ namespace Lab_7
 
             public void Print()
             {
-                Console.WriteLine($"{name} {surname} - {Total}");
+                Console.WriteLine($"{_name} {_surname} - {Total}");
             }
         }
 
         public class BasketballPlayer : Participant
         {
+
             public override bool IsExpelled
             {
                 get
                 {
-                    if (penaltyTimes == null) return false;
+                    if (_minuts == null) return false;
                     int count = 0;
-                    for (int i = 0; i < penaltyTimes.Length; i++)
+                    for (int i = 0; i < _minuts.Length; i++)
                     {
-                        if (penaltyTimes[i] >= 5) count++;
+                        if (_minuts[i] >= 5) count++;
                     }
-                    for (int i = 0; i < penaltyTimes.Length; i++)
+                    for (int i = 0; i < _minuts.Length; i++)
                     {
-                        if (this.Total > 2 * penaltyTimes.Length || count > 0.1 * penaltyTimes.Length)
+                        if (this.Total > 2 * _minuts.Length || count > 0.1 * _minuts.Length)
                         {
                             return true;
                         }
@@ -137,40 +139,40 @@ namespace Lab_7
 
             public BasketballPlayer(string name, string surname) : base(name, surname) 
             {
-                penaltyTimes = new int[0];
+                _minuts = new int[0];
             }
 
             public override void PlayMatch(int foul)
             {
-                if (penaltyTimes == null || foul < 0 || foul > 5) return;
+                if (_minuts == null || foul < 0 || foul > 5) return;
                 base.PlayMatch(foul);
+
             }
         }
 
-        public class HockeyPlayer : Participant
+        public class HockeyPlayer: Participant
         {
-            private int allminuts;
-            private int count;
-            
+            private int _allminuts;
+            private int _count;
             public HockeyPlayer(string name, string surname) : base(name, surname)
             {
-                count++;
-                penaltyTimes = new int[0];
+                _count++;
+                _minuts = new int[0];
             }
 
             public override bool IsExpelled
             {
                 get
                 {
-                    if (penaltyTimes == null) return false;
-                    for (int i = 0; i < penaltyTimes.Length; i++)
+                    if (_minuts == null) return false;
+                    for (int i = 0; i < _minuts.Length; i++)
                     {
-                        if (penaltyTimes[i] >= 10) return true;
+                        if (_minuts[i] >= 10) return true;
                     }
-                    for (int i = 0; i < penaltyTimes.Length; i++)
+                    for (int i = 0; i < _minuts.Length; i++)
                     {
-                        if (count == 0) return false;
-                        if (penaltyTimes.Sum() > 0.1 * allminuts / count)
+                        if (_count == 0) return false;
+                        if (_minuts.Sum() > 0.1 * _allminuts / _count)
                         {
                             return true;
                         }
@@ -183,7 +185,8 @@ namespace Lab_7
             {
                 if (minuts < 0 || minuts > 5) return;
                 base.PlayMatch(minuts);
-                allminuts += minuts;
+                _allminuts += minuts;
+
             }
         }
     }
