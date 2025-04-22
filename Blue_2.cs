@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Authentication.ExtendedProtection.Configuration;
@@ -11,39 +11,39 @@ namespace Lab_7
     {
         public abstract class WaterJump 
         {
-            private string tournamentName;
-            private int prizeFund;
-            private Participant[] participants;
+            private string _name;
+            private int _bank;
+            private Participant[] _participants;
 
-            public string Name => tournamentName;
-            public int Bank => prizeFund;
-            public Participant[] Participants => participants;
+            public string Name => _name;
+            public int Bank => _bank;
+            public Participant[] Participants => _participants;
 
             public abstract double[] Prize { get; }
 
-            public WaterJump(string tournamentName, int prizeFund)
+            public WaterJump(string name, int bank)
             {
-                this.tournamentName = tournamentName;
-                this.prizeFund = prizeFund;
-                this.participants = new Participant[0];
+                _name = name;
+                _bank = bank;
+                _participants = new Participant[0];
             }
 
             public void Add(Participant participant)
             {
-                if (participants == null) return;
-                Participant[] newarr = new Participant[participants.Length + 1];
-                for(int i = 0; i < participants.Length; i++)
+                if (_participants == null) return;
+                Participant[] newarr = new Participant[_participants.Length + 1];
+                for(int i = 0; i < _participants.Length; i++)
                 {
-                    newarr[i] = participants[i];
+                    newarr[i] = _participants[i];
                 }
-                newarr[participants.Length] = participant;
-                participants = newarr;
+                newarr[_participants.Length] = participant;
+                _participants = newarr;
             }
 
-            public void Add(Participant[] newParticipants)
+            public void Add(Participant[] participants)
             {
-                if (participants == null || newParticipants == null || newParticipants.Length == 0) return;
-                foreach(Participant participant in newParticipants)
+                if (_participants == null || participants == null || participants.Length == 0) return;
+                foreach(Participant participant in participants)
                 {
                     Add(participant);
                 }
@@ -52,7 +52,7 @@ namespace Lab_7
 
         public class WaterJump3m : WaterJump
         {
-            public WaterJump3m(string tournamentName, int prizeFund) : base(tournamentName, prizeFund) { }
+            public WaterJump3m(string name, int bank) : base(name, bank) { }
 
             public override double[] Prize
             {
@@ -64,13 +64,16 @@ namespace Lab_7
                     prizes[1] = 0.3 * this.Bank;
                     prizes[2] = 0.2 * this.Bank;
                     return prizes;
+
                 }
             }
+
         }
 
         public class WaterJump5m : WaterJump
         {
-            public WaterJump5m(string tournamentName, int prizeFund) : base(tournamentName, prizeFund) { }
+            public WaterJump5m(string name, int bank) : base(name, bank) { }
+
 
             public override double[] Prize
             {
@@ -86,6 +89,7 @@ namespace Lab_7
                     int halfCount = this.Participants.Length / 2;
                     int topCount = Math.Min(Math.Max(halfCount, 3), 10); 
 
+                  
                     double nPercent = 20.0 / topCount;
 
                     for (int i = 3; i < topCount; i++)
@@ -97,27 +101,28 @@ namespace Lab_7
                 }
             }
         }
-
         public struct Participant
         {
-            private string name;
-            private string surname;
-            private int[,] marks;
-            private int ind;
 
-            public string Name => name;
-            public string Surname => surname;
+            private string _name;
+            private string _surname;
+            private int[,] _marks;
+            private int _lastadd;
+
+
+            public string Name => _name;
+            public string Surname => _surname;
             public int[,] Marks
             {
                 get
                 {
-                    if (marks == null || marks.GetLength(0) == 0 || marks.GetLength(1) == 0) return null; 
-                    int[,] copy = new int[marks.GetLength(0), marks.GetLength(1)];
+                    if (_marks == null || _marks.GetLength(0) == 0 || _marks.GetLength(1) == 0) return null; 
+                    int[,] copy = new int[_marks.GetLength(0), _marks.GetLength(1)];
                     for (int i = 0; i < copy.GetLength(0); i++)
                     {
                         for (int j = 0; j < copy.GetLength(1); j++)
                         {
-                            copy[i, j] = marks[i, j];
+                            copy[i, j] = _marks[i, j];
                         }
                     }
                     return copy;
@@ -128,13 +133,13 @@ namespace Lab_7
             {
                 get
                 {
-                    if (marks == null || marks.GetLength(0) == 0 || marks.GetLength(1) == 0) return 0;
+                    if (_marks == null || _marks.GetLength(0) == 0 || _marks.GetLength(1) == 0) return 0;
                     int sum = 0;
                     for (int i = 0; i < 2; i++)
                     {
                         for (int j = 0; j < 5; j++)
                         {
-                            sum += marks[i, j];
+                            sum += _marks[i, j];
                         }
                     }
                     return sum;
@@ -143,21 +148,22 @@ namespace Lab_7
 
             public Participant(string name, string surname)
             {
-                this.name = name;
-                this.surname = surname;
-                this.marks = new int[2, 5];
-                this.ind = -1;
+                _name = name;
+                _surname = surname;
+                _marks = new int[2, 5];
+                _lastadd = -1;
             }
 
             public void Jump(int[] result)
             {
-                if (marks == null || result == null) return;
-                if (ind >= marks.GetLength(0)) return;
+                if (_marks == null || result == null) return;
+                if (_lastadd >= _marks.GetLength(0)) return;
                 for (int i = 0; i < 5; i++)
                 {
-                    marks[ind + 1, i] = result[i];
+                    _marks[_lastadd + 1, i] = result[i];
+
                 }
-                ind++;
+                _lastadd++;
             }
 
             public static void Sort(Participant[] array)
@@ -179,6 +185,7 @@ namespace Lab_7
                             Participant temp = array[j];
                             array[j] = array[j + 1];
                             array[j + 1] = temp;
+
                             swapped = true;
                         }
                     }
@@ -190,8 +197,9 @@ namespace Lab_7
 
             public void Print()
             {
-                Console.WriteLine($"{name} {surname} - {TotalScore} ");
+                Console.WriteLine($"{_name} {_surname} - {TotalScore} ");
             }
+
         }
     }
 }
