@@ -10,183 +10,164 @@ namespace Lab_7
     {
         public class Participant
         {
-            private string _name;
-            private string _surname;
-            protected int[] _minuts;
+            private string name;
+            private string surname;
+            protected int[] penalties;
+            protected bool is_expelled;
 
-            public string Name => _name;
-            public string Surname => _surname;
+            public string Name => name;
+            public string Surname => surname;
             public int[] Penalties
             {
                 get
                 {
-                    if (_minuts == null) return null;
-                    int[] copy = new int[_minuts.Length];
-                    Array.Copy(_minuts, copy, copy.Length);
-                    return copy;
+                    if (penalties == null) return null;
+                    int[] copyArray = new int[penalties.Length];
+                    Array.Copy(penalties, copyArray, penalties.Length);
+                    return copyArray;
                 }
             }
-
             public int Total
             {
                 get
                 {
-                    if (_minuts == null) return 0;
-                    int sum = 0;
-                    for (int i = 0; i < _minuts.Length; i++)
+                    if (penalties == null) return 0;
+                    int total = 0;
+                    foreach (int time in penalties)
                     {
-                        sum += _minuts[i];
+                        total += time;
                     }
-                    return sum;
+                    return total;
                 }
             }
 
-            public virtual bool IsExpelled
+            public virtual bool IsExpelled 
             {
-                get
+                get 
                 {
-                    if (_minuts == null) return false;
-                    bool isExpelled = false;
-                    for (int i = 0; i < _minuts.Length; i++)
+                    if (penalties == null || penalties.Length == 0) return false;
+                    for (int i = 0; i < penalties.Length; i++)
                     {
-                        if (_minuts[i] == 10)
-                        {
-                            isExpelled = true;
-                            break;
-                        }
+                        if (penalties[i] == 10) return true;
                     }
-                    return isExpelled;
+                    return false;
                 }
             }
-
+            
             public Participant(string name, string surname)
             {
-                _name = name;
-                _surname = surname;
-                _minuts = new int[0];
+                name = name;
+                surname = surname;
+                penalties = new int[0]; 
+                is_expelled = false;
             }
-
 
             public virtual void PlayMatch(int time)
             {
-                if (_minuts == null) return;
-                int[] arr = new int[_minuts.Length + 1];
-                for (int i = 0; i < _minuts.Length; i++)
-                {
-                    arr[i] = _minuts[i];
-                }
-                arr[arr.Length - 1] = time;
-                _minuts = arr;
+                if (penalties == null) return; 
+                Array.Resize(ref penalties, penalties.Length + 1);
+                penalties[penalties.Length - 1] = time;
             }
 
             public static void Sort(Participant[] array)
             {
-                if (array == null || array.Length <= 1)
-                    return;
-
-                int n = array.Length;
-                bool swapped;
-
-                for (int i = 0; i < n - 1; i++)
+                if (array == null) return;
+                for (int i = 0; i < array.Length - 1; i++)
                 {
-                    swapped = false;
-
-                    for (int j = 0; j < n - 1 - i; j++)
+                    for (int j = 0; j < array.Length-1-i; j++)
                     {
-                        if (array[j].Total > array[j + 1].Total)
+                        if (array[j].Total > array[j+1].Total)
                         {
-                            Participant temp = array[j];
-                            array[j] = array[j + 1];
-                            array[j + 1] = temp;
-
-                            swapped = true;
+                            Participant elem = array[j];
+                            array[j] = array[j+1];
+                            array[j+1] = elem;
                         }
                     }
-                    if (!swapped)
-                        break;
                 }
             }
 
             public void Print()
             {
-                Console.WriteLine($"{_name} {_surname} - {Total}");
+                Console.Write($"{Name} {Surname} ");
+                foreach (int time in penalties)
+                {
+                    Console.Write($"{time} ");
+                }
+                Console.WriteLine();
+                if (IsExpelled)
+                {
+                    Console.WriteLine("Исключен из списка кандидатов.");
+                }
+                Console.WriteLine();
             }
         }
-
-        public class BasketballPlayer : Participant
+        public class BasketballPlayer: Participant
         {
+            private int matchCount;
+            private int foulCount;
 
-            public override bool IsExpelled
+            public BasketballPlayer(string name, string surname) : base(name, surname)
             {
-                get
+                matchCount = 0;
+                foulCount = 0;
+            }
+
+            public override void PlayMatch(int time)
+            {
+                base.PlayMatch(time); 
+                matchCount++;
+
+                if (time == 5)
                 {
-                    if (_minuts == null) return false;
-                    int count = 0;
-                    for (int i = 0; i < _minuts.Length; i++)
-                    {
-                        if (_minuts[i] >= 5) count++;
-                    }
-                    for (int i = 0; i < _minuts.Length; i++)
-                    {
-                        if (this.Total > 2 * _minuts.Length || count > 0.1 * _minuts.Length)
-                        {
-                            return true;
-                        }
-                    }
-                    return false;
+                    foulCount++; 
                 }
             }
 
-            public BasketballPlayer(string name, string surname) : base(name, surname) 
-            {
-                _minuts = new int[0];
-            }
+            public override bool IsExpelled=>is_expelled;
 
-            public override void PlayMatch(int foul)
-            {
-                if (_minuts == null || foul < 0 || foul > 5) return;
-                base.PlayMatch(foul);
-
-            }
         }
-
-        public class HockeyPlayer: Participant
+        public class HockeyPlayer : Participant
         {
-            private int _allminuts;
-            private int _count;
+            private int totalPenaltyTime;
+            private int matchCount;
+
             public HockeyPlayer(string name, string surname) : base(name, surname)
             {
-                _count++;
-                _minuts = new int[0];
+                totalPenaltyTime = 0;
+                matchCount = 0;
             }
 
-            public override bool IsExpelled
+            public override void PlayMatch(int penaltyTime)
             {
-                get
+                matchCount++; 
+                totalPenaltyTime += penaltyTime; 
+
+                if (penaltyTime >= 10)
                 {
-                    if (_minuts == null) return false;
-                    for (int i = 0; i < _minuts.Length; i++)
-                    {
-                        if (_minuts[i] >= 10) return true;
-                    }
-                    for (int i = 0; i < _minuts.Length; i++)
-                    {
-                        if (_count == 0) return false;
-                        if (_minuts.Sum() > 0.1 * _allminuts / _count)
-                        {
-                            return true;
-                        }
-                    }
-                    return false;
+                    is_expelled = true;
                 }
             }
 
-            public override void PlayMatch(int minuts)
+            public override bool IsExpelled 
             {
-                if (minuts < 0 || minuts > 5) return;
-                base.PlayMatch(minuts);
-                _allminuts += minuts;
+                get
+                {
+                    if (penalties == null) return false;
+                    int sm = 0;
 
+                    for (int i = 0; i < penalties.Length; i++)
+                    {
+                        sm += penalties[i];
+                        if (penalties[i] >= 10) 
+                        { 
+                            is_expelled = true; 
+                            return true; 
+                        }
+                    }
+                    if (sm > 0.1 * totalPenaltyTime / matchCount) return true;
+
+                    return false;
+                }
             }
         }
     }
