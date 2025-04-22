@@ -80,6 +80,7 @@ namespace Lab_7
                     int scores = 0;
                     foreach (var sportsman in _sportsmen)
                     {
+                        if (sportsman == null) continue;
                         switch (sportsman.Place)
                         {
                             case 1:
