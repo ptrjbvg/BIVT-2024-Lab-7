@@ -66,7 +66,10 @@ namespace Lab_7
             {
                 get
                 {
-                    if (marks == null || marks.Length == 18) return null;
+                    if (marks == null)
+                         return null;
+                    if (marks.Length == 0)
+                        return new int[0];
                     int[,] copyArray = new int[2, 5];
                     Array.Copy(marks, copyArray, marks.Length);
                     return copyArray;
