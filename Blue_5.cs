@@ -93,7 +93,7 @@ namespace Lab_7
                             top = sportsman.Place;
                         }
                     }
-                    return top == int.MaxValue ? 0 : top; 
+                    return top == int.MaxValue ? 18 : top; 
                 }
             }
 
