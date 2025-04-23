@@ -16,8 +16,8 @@ namespace Lab_7
             private Participant[] participants;
             protected WaterJump(string name, int bank)
             {
-                name = name;
-                bank = bank;
+                this.name = name;
+                this.bank = bank;
                 participants = new Participant[0];
             }
 
