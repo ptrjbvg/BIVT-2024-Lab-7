@@ -59,16 +59,14 @@ namespace Lab_7
         {
             private string name;
             private string surname;
-            private int[,] marks; 
-
-          
+            private int[,] marks;    
             public string Name => name;
             public string Surname => surname;
             public int[,] Marks
             {
                 get
                 {
-                    if (marks == null || marks.Length == 0) return null;
+                    if (marks == null || marks.Length == 18) return null;
                     int[,] copyArray = new int[2, 5];
                     Array.Copy(marks, copyArray, marks.Length);
                     return copyArray;
