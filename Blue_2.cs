@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace Lab_7
 {
     public class Blue_2
@@ -14,6 +15,7 @@ namespace Lab_7
             private string name;
             private int bank;
             private Participant[] participants;
+
             protected WaterJump(string name, int bank)
             {
                 this.name = name;
@@ -34,7 +36,7 @@ namespace Lab_7
 
             public void Add(Participant participant)
             {
-                if (participants==null)
+                if (participants == null)
                 {
                     return;
                 }
@@ -51,15 +53,17 @@ namespace Lab_7
             {
                 foreach (var participant in newParticipants)
                 {
-                    Add(participant); 
+                    Add(participant);
                 }
             }
         }
+
         public struct Participant
         {
             private string name;
             private string surname;
-            private int[,] marks;    
+            private int[,] marks;
+
             public string Name => name;
             public string Surname => surname;
             public int[,] Marks
@@ -67,7 +71,7 @@ namespace Lab_7
                 get
                 {
                     if (marks == null)
-                         return null;
+                        return null;
                     if (marks.Length == 0)
                         return new int[0, 0];
                     int[,] copyArray = new int[2, 5];
@@ -75,14 +79,14 @@ namespace Lab_7
                     return copyArray;
                 }
             }
+
             public int TotalScore
             {
                 get
                 {
-                    if (marks == null || marks.Length == 0) return 0; 
-
+                    if (marks == null || marks.Length == 0) return 0;
                     int total = 0;
-                    for (int i = 0; i <2; i++)
+                    for (int i = 0; i < 2; i++)
                     {
                         for (int j = 0; j < 5; j++)
                         {
@@ -93,7 +97,6 @@ namespace Lab_7
                 }
             }
 
-
             public Participant(string name, string surname)
             {
                 this.name = name;
@@ -101,23 +104,13 @@ namespace Lab_7
                 this.marks = new int[2, 5];
             }
 
-
             public void Jump(int[] result)
             {
                 if (result == null || result.Length == 0)
                 {
                     return;
                 }
-
-                int scoresToTake = 0;
-                if (result.Length < 5)
-                {
-                    scoresToTake = result.Length;
-                }
-                else
-                {
-                    scoresToTake = 5;
-                }
+                int scoresToTake = result.Length < 5 ? result.Length : 5;
                 if (marks == null || marks.Length == 0)
                 {
                     return;
@@ -133,7 +126,6 @@ namespace Lab_7
                             break;
                         }
                     }
-
                     if (isEmpty)
                     {
                         for (int j = 0; j < scoresToTake; j++)
@@ -143,10 +135,7 @@ namespace Lab_7
                         return;
                     }
                 }
-
-                return;
             }
-
 
             public static void Sort(Participant[] array)
             {
@@ -170,10 +159,10 @@ namespace Lab_7
                 Console.WriteLine($"{Name} {Surname} {TotalScore}");
             }
         }
+
         public class WaterJump3m : WaterJump
         {
-            public WaterJump3m(string name, int bank)
-                : base(name, bank)
+            public WaterJump3m(string name, int bank) : base(name, bank)
             {
             }
 
@@ -181,7 +170,7 @@ namespace Lab_7
             {
                 get
                 {
-                    if (Participants.Count() < 3 || Participants == null)
+                    if (Participants == null || Participants.Length < 3)
                     {
                         return null;
                     }
@@ -197,14 +186,15 @@ namespace Lab_7
 
         public class WaterJump5m : WaterJump
         {
-            public WaterJump5m(string name, int bank) :
-                base(name, bank)
-            { }
+            public WaterJump5m(string name, int bank) : base(name, bank)
+            {
+            }
+
             public override double[] Prize
             {
                 get
                 {
-                    if (Participants.Count() < 3 || Participants == null)
+                    if (Participants == null || Participants.Length < 3)
                     {
                         return null;
                     }
@@ -230,9 +220,9 @@ namespace Lab_7
                     prizes[0] = firstPlacePrize;
                     prizes[1] = secondPlacePrize;
                     prizes[2] = thirdPlacePrize;
-                    for (int i = 0; i < topParc; i++)
+                    for (int i = 3; i < prizes.Length; i++)
                     {
-                        prizes[i] = othersPlacePrise;
+                        prizes[i] += othersPlacePrise;
                     }
                     return prizes;
                 }
@@ -240,3 +230,6 @@ namespace Lab_7
         }
     }
 }
+
+    
+   
