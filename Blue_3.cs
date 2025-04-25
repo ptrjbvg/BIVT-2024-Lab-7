@@ -128,7 +128,7 @@ namespace Lab_7
             {
                 get
                 {
-                    if (penaltyTimes.Length == 0 ) return false
+                    if (penaltyTimes.Length == 0 ) return false;
                     if (penaltyTimes == null) return false;
                     int matches = penaltyTimes.Length;
                     int bans = 0;
