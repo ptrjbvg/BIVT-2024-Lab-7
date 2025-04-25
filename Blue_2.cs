@@ -216,7 +216,7 @@ namespace Lab_7
                     double firstPlacePrize = Bank * 0.4;
                     double secondPlacePrize = Bank * 0.25;
                     double thirdPlacePrize = Bank * 0.15;
-                    double othersPlacePrise = Bank * 20 / topParc / 100;
+                    double othersPlacePrise = (double)Bank * 20 / (double)topParc / 100;
                     prizes[0] = firstPlacePrize;
                     prizes[1] = secondPlacePrize;
                     prizes[2] = thirdPlacePrize;
